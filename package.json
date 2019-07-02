@@ -1,0 +1,23 @@
+{
+  "name": "ff-ctrl-e",
+  "version": "1.0.0",
+  "description": "Ctrl+E for Firefox",
+  "main": "ctrl-e.min.js",
+  "author": "crestonbunch@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "build": "./build.sh",
+    "release": "./build.sh && ./release.sh"
+  },
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^67.0.2",
+    "browserify": "^16.2.3",
+    "svgo": "^1.2.2",
+    "tsify": "^4.0.1",
+    "typescript": "^3.5.2",
+    "uglify-js": "^3.6.0"
+  },
+  "dependencies": {
+    "fuse.js": "^3.4.5"
+  }
+}

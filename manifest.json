@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "Ctrl+E",
+    "version": "1.0",
+    "description": "Switch between tabs using ctrl+e",
+    "icons": {},
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Ctrl+E"
+            }
+        }
+    },
+    "browser_action": {
+        "browser_style": true,
+        "default_title": "Ctrl+E",
+        "default_popup": "build/ctrl-e.html",
+        "default_icon": "build/assets/icon.svg"
+    },
+    "permissions": ["tabs", "history", "topSites"]
+}
