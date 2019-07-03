@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Ctrl+E",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Switch between tabs using ctrl+e",
     "icons": {},
     "commands": {

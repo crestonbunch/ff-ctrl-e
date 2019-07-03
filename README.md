@@ -9,10 +9,11 @@ Unfortunately Ctrl+P is reserved for printing in most browsers.
 
 Current:
 * Quickly search open tabs using fuzzy matching
+* Search the 1000 most recent history items
 
 Future:
-* Include results from recent browser history
-* Return search engine results on empty match
+* Index entire browser history
+* Better search and rankings
 
 ## Building
 

@@ -2,11 +2,13 @@ import Fuse from "fuse.js";
 import Channel, { Producer } from "./channel";
 import SearchResult from "./model";
 
+const MAX_RESULTS = 20;
+
 const FUSE_OPTIONS = {
     shouldSort: true,
     threshold: 0.6,
     location: 0,
-    distance: 100,
+    distance: 15,
     maxPatternLength: 32,
     minMatchCharLength: 1,
     keys: ["title", "url"]
@@ -32,22 +34,13 @@ export default class Controller {
         this.channel = channel;
     }
 
-    setCollection = (tabs: Array<browser.tabs.Tab>) => {
-        const results = tabs
-            .filter(tab => tab.url)
-            .map(tab => ({
-                title: tab.title || "",
-                url: tab.url!,
-                icon: tab.favIconUrl,
-                wraps: tab,
-                selected: false
-            }))
-        this.fuse.setCollection(results);
+    setCollection = (collection: Array<SearchResult>) => {
+        this.fuse.setCollection(collection);
     }
 
     private onInput = (ev: Event) => {
         const val = (ev.target! as HTMLInputElement).value;
-        this.results = this.fuse.search(val);
+        this.results = val ? this.fuse.search(val).slice(0, MAX_RESULTS) : [];
         this.selected = this.results.length > 0 ? 0 : undefined;
         this.produce();
     }
@@ -72,11 +65,21 @@ export default class Controller {
         if (this.selected === undefined) {
             return;
         }
-        const result = this.results[this.selected].wraps;
-        if (result.id === undefined) {
-            return;
+        const result = this.results[this.selected];
+        switch (result.kind) {
+            case "tab":
+                if (result.wraps.id === undefined) {
+                    return;
+                }
+                await browser.tabs.update(result.wraps.id, { active: true });
+                break;
+            case "history":
+                await browser.tabs.create({
+                    active: true,
+                    url: result.url
+                })
+                break;
         }
-        await browser.tabs.update(result.id, { active: true });
         window.close();
     }
 
@@ -84,8 +87,8 @@ export default class Controller {
         if (this.selected !== undefined) {
             // Mark the selected result as 'selected' before sending it
             // to the consumer.
-            const sub = { ...this.results[this.selected], selected: true };
             const copy = this.results.slice();
+            const sub = { ...copy[this.selected], selected: true };
             copy.splice(this.selected, 1, sub);
             this.channel.produce(copy);
         } else {

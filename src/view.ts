@@ -26,13 +26,23 @@ export default class View {
             n.classList.add("selected");
         }
 
+        const kind = document.createElement("img");
         const icon = document.createElement("div");
         const title = document.createElement("div");
         const url = document.createElement("div");
+        kind.classList.add("kind");
         icon.classList.add("icon");
         title.classList.add("title");
         url.classList.add("url");
 
+        switch(result.kind) {
+            case "tab":
+                kind.src = "assets/tab.svg"
+                break;
+            case "history":
+                kind.src = "assets/library.svg"
+                break;
+        }
         if (result.icon !== undefined) {
             const img = document.createElement("img");
             img.src = result.icon || "";
@@ -41,6 +51,7 @@ export default class View {
         title.innerText = result.title;
         url.innerText = result.url;
 
+        n.appendChild(kind);
         n.appendChild(icon);
         n.appendChild(title);
         n.appendChild(url);
